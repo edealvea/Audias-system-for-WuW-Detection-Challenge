@@ -4,7 +4,7 @@ Repostitorio conteniendo el código utilizado para entrenar el modelo presentado
 
 No se van a compartir los datos utilizados para dicho entrenamiento por estar sujetos a confidencialidad.
 
-*Al estar el challenge aún en periodo de evaluación no se compartirán los documentos hasta fin de plazo 12 Nov 2024* 
+*Al estar el challenge aún en periodo de evaluación no se compartirán los documentos hasta fin de plazo 12 Nov 2024 cuando se publiquen los resultados* 
 
 ## Archivos
 
