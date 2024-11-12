@@ -2,6 +2,8 @@
 
 Repostitorio conteniendo el código utilizado para entrenar el modelo presentado para las 2024 Albayzin Evaluations, en concreto para el Wake-up Word detection challenge propuesto por Telefónica. El challenge consiste en crear un modelo de keyword spotting para detectar la frase "Okey Aura" en un segmento de audio y además determinar los tiempos en los que se ha dicho la frase.
 
+El paper conteniendo los resultados obtenidos fue publicado el 12/11/2024 en la conferencia IberSPEECH 2024 doi: 10.21437/IberSPEECH.2024-63
+
 **No se van a compartir los datos utilizados para dicho entrenamiento por estar sujetos a confidencialidad.**
 
 
@@ -15,6 +17,6 @@ Repostitorio conteniendo el código utilizado para entrenar el modelo presentado
 - notebook.ipynb es un notebook para utilizar el código anterior
 - run_gen_evaluation.sh archivo bash para ejecutar gen_evaluation.py
 - run_tests.sh bach para ejecutar test_system.py
-- AUDIAS_System_for_the_ALBAYZIN_2024_WuW_Detection_Challenge.pdf es el paper publicado con los resultados obtenidos en el challenge
+
 
   
