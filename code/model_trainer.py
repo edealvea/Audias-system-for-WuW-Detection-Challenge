@@ -401,7 +401,7 @@ def get_lab(row, steps, hop, sample_rate, window_size):
         for i in range(steps):
             start = i * hop / sample_rate
             #print(start, start_time, window_size / sample_rate)
-            if start  <= start_time and start > 0.85*(end_time - start_time) + start_time: #Si ocupa la mayor parte de la ventana el 85% salvo algo del final
+            if start  <= start_time and start + window_size > 0.85*(end_time - start_time) + start_time: #Si ocupa la mayor parte de la ventana el 85% salvo algo del final
                 label.append(1)
             elif start >=start_time and start <  end_time - 0.85*(end_time - start_time):#Si ocupa la mayor parte de la ventana el 85% salvo algo del principio
                 label.append(1)
