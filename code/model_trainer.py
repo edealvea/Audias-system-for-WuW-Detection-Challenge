@@ -372,27 +372,6 @@ def get_feat(audio_path, steps, hop, window_size, sampling_rate):
         audios.append(audio)
     return audios
 
-# def get_lab(row, steps, hop, sample_rate, window_size):
-#     label = []
-#     if row["Label"] == "WuW":
-#         start_time = float(row["Start_Time"])
-#         end_time = float(row["End_Time"])
-#         for i in range(steps):
-#             start = i * hop / sample_rate
-#             #print(start, start_time, window_size / sample_rate)
-#             if start  <= start_time and start + window_size > end_time: #Si ocupa toda la ventana
-#                 label.append(1)
-#             elif start >=start_time and start - hop < start_time:
-#                 label.append(1)
-#             elif start >=start_time and start + window_size < end_time + hop:
-#                 label.append(1)
-#             else:
-#                 label.append(0)
-#     else:
-#         for i in range(steps):
-#                 label.append(0)
-#     return label    
-
 def get_lab(row, steps, hop, sample_rate, window_size):
     label = []
     if row["Label"] == "WuW":
@@ -607,43 +586,6 @@ def splitter(true_labs):
             print(f"Skipped index {i} because has incorrect labeling")
     return true_labs_pos_index, true_labs_neg_index
 
-# def augment_data(audios, labs, noise, rir = torchaudio.load("Lab41-SRI-VOiCES-rm1-impulse-mc01-stu-clo.wav")):
-#     labs_aug = []
-#     audios_aug = []
-#     rir_a = rir[0][:, int(rir[1] * 1.01) : int(rir[1] * 1.3)]
-#     rir_a = rir_a / torch.linalg.vector_norm(rir_a, ord=2)
-#     rir_a =torchaudio.transforms.Resample(orig_freq=rir[1], new_freq=16000)(rir_a)
-
-#     for i in range(len(labs)):
-#         lab = labs[i]
-#         audio = audios[i]
-
-#         if random.random() < 0.75:
-#             vol_down = audio * random.random() 
-            
-#             noised = audio * (1+random.random()) 
-#             noised2 = torchaudio.functional.add_noise(audio, random.choice(noise),torch.tensor([0]))
-
-#             noised_up = audio * (1+random.random())  +  0.5* random.choice(noise) + 0.5 * random.choice(noise)
-
-#             noised_rev = torchaudio.functional.fftconvolve(audio, rir_a, mode="same")[:,:24000]
-
-#             noised_up3 = torchaudio.functional.add_noise(audio, random.choice(noise),torch.tensor([10]))
-
-#             noised_down = torchaudio.functional.add_noise(audio, random.choice(noise),torch.tensor([20]))
-
-            
-#             #noised_down2 = audio * vold + random.choice(noise)
-#             #noised_down3 = audio * vold + random.choice(noise)
-
-#             labs_aug += [lab, lab, lab, lab, lab, lab, lab, lab]
-#             audios_aug += [audio, vol_down, noised, noised_up,noised_rev, noised_down, noised_up3, noised2]
-#         else:
-#             labs_aug += [lab]
-#             audios_aug += [audio]
-#     assert len(audios_aug) == len(labs_aug)
-#     return audios_aug, labs_aug
-
 def get_rir(rir_path):
     lista_doc = os.listdir(rir_path)
     lista_rir = [doc for doc in lista_doc if doc.endswith(".wav") ]
@@ -658,6 +600,20 @@ def get_rir(rir_path):
 
 
 def augment_data(audios, labs, noise, rir_path = r"room-response\impulse"):
+    """
+    Code to augment the audio data
+
+    audios: List of the audios to augmentate
+    labs: list of the labels corresponding to the audios
+    noise: list of the noise to add
+    rir_path: path to the room impulse response audios
+
+    ________
+    Returns audios_aug: a list with the augmented audios
+            labs_aug: a list with the corresponding labels
+    """
+
+    
     labs_aug = []
     audios_aug = []
     rir_auds = get_rir(rir_path)
@@ -681,10 +637,6 @@ def augment_data(audios, labs, noise, rir_path = r"room-response\impulse"):
             noised_up3 = torchaudio.functional.add_noise(audio, random.choice(noise),torch.tensor([10]))
 
             noised_down = torchaudio.functional.add_noise(audio, random.choice(noise),torch.tensor([20]))
-
-            
-            #noised_down2 = audio * vold + random.choice(noise)
-            #noised_down3 = audio * vold + random.choice(noise)
 
             labs_aug += [lab, lab, lab, lab, lab, lab, lab, lab]
             audios_aug += [audio, vol_down, noised, noised_up,noised_rev, noised_down, noised_up3, noised2]
@@ -768,21 +720,8 @@ class Callback():
             self.counter = 0
             self.best_model = model.state_dict()
             torch.save(self.best_model, self.path)
-            #script = torch.jit.script(self.best_model) 
-            #torch.jit.save(script, self.path)
             self.early_stop = False
-            # if isinstance(self.best_model, dict):
-            #     for key, model in self.best_model.items():
-            #         # Script the individual model
-            #         scripted_model = torch.jit.script(model)  # Ensure each item is a ScriptModule
-                    
-            #         # Save each scripted model with a unique name
-            #         torch.jit.save(scripted_model, f"{self.path}_{key}.pt")
-            # else:
-            #     # If it's a single model
-            #     scripted_model = torch.jit.script(self.best_model)
-            #     torch.jit.save(scripted_model, self.path)
-            #     torch.jit.save(script, self.path)
+
             if self.verbose:
                 print(f'Validation loss decreased. Saving model to {self.path}')
         else:
